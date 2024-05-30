@@ -11,8 +11,8 @@ import axios from "axios";
 import React from "react";
 
 
-interface weatherData {
-  name:string;
+interface WeatherDataProps {
+  name: string;
 
   main: {
     temp: number;
@@ -31,8 +31,7 @@ interface weatherData {
   };
 }
 
-
-const [weatherData, setWeatherData] = React.useState<weatherData | null > (null);
+const [weatherData, setWeatherData] = React.useState<WeatherDataProps | null>(null)
 
 
 const DisplayWeather = () => {
@@ -40,13 +39,12 @@ const DisplayWeather = () => {
   // const api_key = process.env.REACT_APP_API_KEY;
   // const api_Endpoint = process.env.REACT_APP_API_ENDPOINT;
 
-  // const api_key = "54016727c8587d8e5199247a26ab659e"; //vic api
   const api_key = "0cc86d16bf572f78cdc96c096c7627e5";
   const api_Endpoint = "https://api.openweathermap.org/data/2.5/";
 
 
   const fetchCurrentWeather = (lat: number, lon: number) => {
-    const url = `${api_Endpoint}weahter? lat=${lat}&lon=${lon}&api_id=${api_key}$units= metric`
+    const url = `${api_Endpoint}weahter? lat=${lat}&lon=${lon}&api_id=${api_key}$units=metric`
 
     async () => {
       const response = await axios.get(url);
@@ -60,7 +58,7 @@ const DisplayWeather = () => {
       const { latitude, longitude } = position.coords;
       Promise.all([fetchCurrentWeather(latitude, longitude)]).then(
         ([currentWeather]) => {
-         setWeatherData(currentWeather);
+          setWeatherData(currentWeather);
 
         })
 
@@ -79,33 +77,43 @@ const DisplayWeather = () => {
           </div>
         </div>
 
-        <div className="weatherArea">
-          <h1>Lagos</h1>
-          <span>lg</span>
-          <div className="icon">
-            icon
-          </div>
-          <h1>18c</h1>
-          <h2>cloudy</h2>
-        </div>
 
-        <div className="bottomInfoArea">
-          <div className="humidityLevel">
-            <WiHumidity className="windIcon" />
-            <div className="humidInfo">
-              <h1>60%</h1>
-              <p>Humidity</p>
-            </div>
-          </div>
+        {weatherData && (
 
-          <div className="wind">
-            <SiWindowsxp className="windIcon" />
-            <div className="humidInfo">
-              <h1>4.44lkm/hr</h1>
-              <p>wind spees</p>
+          <>
+            <div className="weatherArea">
+              <h1>{weatherData.name}</h1>
+              <span>{weatherData.sys.country}</span>
+              <div className="icon">
+                icon
+              </div>
+              <h1>{weatherData.main.temp}</h1>
+              <h2>{weatherData.weather[0].main}</h2>
             </div>
-          </div>
-        </div>
+
+            <div className="bottomInfoArea">
+              <div className="humidityLevel">
+                <WiHumidity className="windIcon" />
+                <div className="humidInfo">
+                  <h1>{weatherData.main.humidity}%</h1>
+                  <p>Humidity</p>
+                </div>
+              </div>
+
+              <div className="wind">
+                <SiWindowsxp className="windIcon" />
+                <div className="humidInfo">
+                  <h1>{weatherData.wind.speed}km/hr</h1>
+                  <p>wind speed</p>
+                </div>
+              </div>
+            </div>
+          </>
+
+        )};
+
+
+
       </div>
     </MainWrapper>
   )
