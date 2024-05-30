@@ -11,21 +11,47 @@ import axios from "axios";
 import React from "react";
 
 
+interface weatherData {
+  name:string;
+
+  main: {
+    temp: number;
+    humidity: number;
+  };
+
+  sys: {
+    country: string;
+  };
+
+  weather: {
+    main: string;
+  }[];
+  wind: {
+    speed: number;
+  };
+}
+
+
+const [weatherData, setWeatherData] = React.useState<weatherData | null > (null);
+
 
 const DisplayWeather = () => {
 
   // const api_key = process.env.REACT_APP_API_KEY;
   // const api_Endpoint = process.env.REACT_APP_API_ENDPOINT;
 
+  // const api_key = "54016727c8587d8e5199247a26ab659e"; //vic api
   const api_key = "0cc86d16bf572f78cdc96c096c7627e5";
   const api_Endpoint = "https://api.openweathermap.org/data/2.5/";
 
 
-  const fetchCurrentWeather = (lat:number, lon:number) => {
-    const url = `${api_Endpoint}weahter? lat=${lat}&lon=${lon}&api_id=${api_key}$units= metric`;
+  const fetchCurrentWeather = (lat: number, lon: number) => {
+    const url = `${api_Endpoint}weahter? lat=${lat}&lon=${lon}&api_id=${api_key}$units= metric`
 
-    const response = await axios.get(url);
-    return response.data;
+    async () => {
+      const response = await axios.get(url);
+      return response.data;
+    };
 
   };
 
@@ -34,9 +60,9 @@ const DisplayWeather = () => {
       const { latitude, longitude } = position.coords;
       Promise.all([fetchCurrentWeather(latitude, longitude)]).then(
         ([currentWeather]) => {
-        console.log(currentWeather);
+         setWeatherData(currentWeather);
 
-      })
+        })
 
     })
   })
