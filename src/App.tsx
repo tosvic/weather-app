@@ -1,11 +1,14 @@
 import './App.css'
-import DisplayWeather from './components/DisplayWeather'
+import Working from './components/Working'
+// import DisplayWeather from './components/DisplayWeather'
 
 function App() {
 
   return (
     <>
-      <DisplayWeather />
+      {/* <DisplayWeather /> */}
+
+      <Working />
     </>
   )
 }
